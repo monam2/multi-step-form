@@ -31,7 +31,9 @@ graph TD
 ```
 
 ## 2. 명세 상세 분석
-
+<details>
+<summary>명세 보기</summary>
+    
 ### 0단계.
 
 - **새로고침 후 폼상태를 유지**
@@ -128,6 +130,11 @@ graph TD
 
 - 공개(public), 비공개(private)로 설정 가능해야 한다.
 
-## etc.
+
+</details>
+
+
+## 3. etc.
 
 - RHF와 emotion에 익숙하지 않으므로 최대한 공식문서 내용을 기반으로 개발한다.
+- emotion은 CSS prop 방식과 Styled Componets 방식 중 CSS prop 방식을 사용한다. [링크](https://toss.oopy.io/cc9367e4-4ff6-4241-8189-9f3cf250f5d2#8a5bf6e1-4d2f-4c9c-836b-13154d5e200a)의 글에서 CSS prop 방식을 적극 사용한다고 한다.
