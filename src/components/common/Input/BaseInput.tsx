@@ -10,6 +10,8 @@ interface BaseInputStylesProps
   color?: InputColor;
   variant?: InputVariant;
   size?: InputSize;
+  error?: string;
+  helperText?: string;
 }
 
 const baseInputStyles = (props: BaseInputStylesProps) => {
@@ -28,7 +30,7 @@ const baseInputStyles = (props: BaseInputStylesProps) => {
       variant === 'outlined'
         ? `2px solid ${color === 'error' ? colors.error : colors.lightGray}`
         : '2px solid transparent',
-    padding: size === 'small' ? '8px 12px' : size === 'medium' ? '12px' : '16px',
+    padding: size === 'small' ? '8px 12px' : '12px',
     fontSize: size === 'small' ? '12px' : size === 'medium' ? '14px' : '16px',
     fontWeight: 'semibold',
     color: disabled ? colors.darkGray : colors.black,
@@ -51,8 +53,53 @@ const baseInputStyles = (props: BaseInputStylesProps) => {
   });
 };
 
-const BaseInput = ({ color, variant, size, ...restProps }: BaseInputStylesProps) => {
-  return <input css={baseInputStyles({ color, variant, size, ...restProps })} {...restProps} />;
+const baseInputWrapperStyles = css({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px',
+  fontWeight: 'semibold',
+});
+
+const baseInputTextWrapperStyles = ({ error }: { error?: string }) => {
+  return css({
+    color: colors.gray,
+    fontSize: '12px',
+    marginTop: '2px',
+    marginLeft: error ? '0' : 'auto',
+  });
+};
+
+const baseInputErrorStyles = () =>
+  css({
+    ...baseInputTextWrapperStyles,
+    color: colors.error,
+  });
+
+const baseInputHelperTextStyles = css({
+  ...baseInputTextWrapperStyles,
+  margin: '0 0 0 auto',
+});
+
+const BaseInput = ({
+  color,
+  variant,
+  size,
+  error,
+  helperText,
+  ...restProps
+}: BaseInputStylesProps) => {
+  return (
+    <div css={baseInputWrapperStyles}>
+      <input css={baseInputStyles({ color, variant, size, ...restProps })} {...restProps} />
+      {(error || helperText) && (
+        <div css={baseInputTextWrapperStyles({ error })}>
+          {error && <p css={baseInputErrorStyles}>{error}</p>}
+          {helperText && <p css={baseInputHelperTextStyles}>{helperText}</p>}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default BaseInput;
