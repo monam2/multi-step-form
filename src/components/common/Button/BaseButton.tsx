@@ -3,7 +3,7 @@ import { colors } from '@/styles/colors';
 
 type ButtonColor = 'primary' | 'secondary';
 type ButtonVariant = 'contained' | 'outlined';
-type ButtonSize = 'small' | 'medium' | 'large';
+type ButtonSize = 'small' | 'medium' | 'large' | 'full';
 
 interface BaseButtonStylesProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?: ButtonColor;
@@ -21,12 +21,14 @@ const baseButtonStyles = (props: BaseButtonStylesProps) => {
     backgroundColor: variant === 'contained' ? colors[color] : 'transparent',
     border: variant === 'outlined' ? `1.5px solid ${colors[color]}` : 'none',
     borderRadius: '8px',
-    padding: size === 'small' ? '8px 16px' : size === 'medium' ? '12px 24px' : '16px 32px',
+    padding: size === 'small' ? '8px 16px' : size === 'medium' ? '10px 20px' : '12px 24px',
+    width: size === 'full' ? '100%' : 'fit-content',
+    height: size === 'full' ? '40px' : '30px',
     fontSize: size === 'small' ? '12px' : size === 'medium' ? '14px' : '16px',
     fontWeight: 'bold',
     color: variant === 'contained' ? colors.white : colors.primary,
     cursor: 'pointer',
-    transition: 'all 0.2s ease',
+    transition: 'all 0.1s ease',
 
     '&:hover': {
       transform: 'translateY(-0.5px)',
