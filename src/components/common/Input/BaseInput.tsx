@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { colors } from '@/styles/colors';
 
 type InputColor = 'primary' | 'secondary' | 'error';
-type InputVariant = 'filled' | 'outlined';
+type InputVariant = 'contained' | 'outlined';
 type InputSize = 'small' | 'medium' | 'large' | 'full';
 
 interface BaseInputStylesProps
@@ -25,7 +25,7 @@ const baseInputStyles = (props: BaseInputStylesProps) => {
     width: size === 'full' ? '100%' : 'fit-content',
     height: size === 'full' ? '40px' : 'auto',
     backgroundColor:
-      variant === 'filled' ? (disabled ? colors.lightGray : colors.white) : 'transparent',
+      variant === 'contained' ? (disabled ? colors.lightGray : colors.white) : 'transparent',
     outline:
       variant === 'outlined'
         ? `2px solid ${color === 'error' ? colors.error : colors.lightGray}`
@@ -81,17 +81,11 @@ const baseInputHelperTextStyles = css({
   margin: '0 0 0 auto',
 });
 
-const BaseInput = ({
-  color,
-  variant,
-  size,
-  error,
-  helperText,
-  ...restProps
-}: BaseInputStylesProps) => {
+const BaseInput = ({ error, helperText, ...restProps }: BaseInputStylesProps) => {
+  const { color, variant, size, ...props } = restProps;
   return (
     <div css={baseInputWrapperStyles}>
-      <input css={baseInputStyles({ color, variant, size, ...restProps })} {...restProps} />
+      <input css={baseInputStyles({ color, variant, size, ...props })} {...props} />
       {(error || helperText) && (
         <div css={baseInputTextWrapperStyles({ error })}>
           {error && <p css={baseInputErrorStyles}>{error}</p>}

@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import { colors } from '@/styles/colors';
-import { BaseInput } from '@/components/common';
+import { BaseSelect } from '@/components/common';
 
-interface LabeledInputProps extends React.ComponentProps<typeof BaseInput> {
+interface LabeledSelectProps extends React.ComponentProps<typeof BaseSelect> {
   label: string;
   id?: string;
   required?: boolean;
@@ -10,23 +10,29 @@ interface LabeledInputProps extends React.ComponentProps<typeof BaseInput> {
   helperText?: string;
 }
 
-const LabeledInput = ({
+const labeledSelectWrapperStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '4px',
+});
+
+const LabeledSelect = ({
   label,
   id,
   required,
   error,
   helperText,
   ...restProps
-}: LabeledInputProps) => {
+}: LabeledSelectProps) => {
   return (
-    <div css={css({ display: 'flex', flexDirection: 'column', gap: '4px' })}>
+    <div css={labeledSelectWrapperStyles}>
       <label htmlFor={id} css={css({ fontWeight: 'semibold' })}>
         {label}
         {required && <span css={css({ color: colors.error })}>*</span>}
       </label>
-      <BaseInput id={id} error={error} helperText={helperText} {...restProps} />
+      <BaseSelect id={id} error={error} helperText={helperText} {...restProps} />
     </div>
   );
 };
 
-export default LabeledInput;
+export default LabeledSelect;
