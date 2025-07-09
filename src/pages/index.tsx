@@ -1,9 +1,14 @@
-export default function Home() {
-  return (
-    <>
-      <div>
-        <h1>Hello World</h1>
-      </div>
-    </>
-  );
-}
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+const HomePage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push('/books');
+  }, [router]);
+
+  return <></>;
+};
+
+export default HomePage;
