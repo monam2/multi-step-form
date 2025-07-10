@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 interface UseScreenSizeProps {
   width?: number;
@@ -18,15 +18,15 @@ const useScreenSize = ({ width, height }: UseScreenSizeProps) => {
   const widthFlag = width ? screenWidth >= width : true;
   const heightFlag = height ? screenHeight >= height : true;
 
-  // isDesktop을 useMemo로 하더라도, 재계산되는 경우 = 창 크기가 바뀌는 경우이므로 빈번하지 않다.
   const isDesktop = widthFlag && heightFlag;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const handleResize = () => {
       setScreenWidth(window.innerWidth);
       setScreenHeight(window.innerHeight);
     };
 
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
