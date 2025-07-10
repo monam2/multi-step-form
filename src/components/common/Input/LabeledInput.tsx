@@ -19,7 +19,7 @@ const LabeledInput = ({
   ...restProps
 }: LabeledInputProps) => {
   return (
-    <div css={css({ display: 'flex', flexDirection: 'column', gap: '4px' })}>
+    <div css={css({ display: 'flex', flexDirection: 'column', gap: '4px', width: '100%' })}>
       <label htmlFor={id} css={css({ fontWeight: 'semibold' })}>
         {label}
         {required && <span css={css({ color: colors.error })}>*</span>}
