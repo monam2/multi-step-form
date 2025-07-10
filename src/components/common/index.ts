@@ -10,5 +10,10 @@ export { default as LabeledInput } from './Input/LabeledInput';
 export { default as BaseSelect } from './Select/BaseSelect';
 export { default as LabeledSelect } from './Select/LabeledSelect';
 
+/* BaseTextarea */
+export { default as BaseTextarea } from './Textarea/BaseTextarea';
+export { default as LabeledTextarea } from './Textarea/LabeledTextarea';
+
 /* Icons */
 export { default as StarIcon } from './Icon/StarIcon';
+export { default as DeleteIcon } from './Icon/DeleteIcon';

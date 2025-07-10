@@ -16,7 +16,11 @@ const RatingEachWrapperStyles = css({
   zIndex: 1,
 });
 
-const Rating = () => {
+interface RatingProps {
+  size?: number;
+}
+
+const Rating = ({ size = 32 }: RatingProps) => {
   const [hoverRating, setHoverRating] = useState(0);
   const [realRating, setRealRating] = useState(0);
 
@@ -31,6 +35,11 @@ const Rating = () => {
 
   /** 클릭했을 때의 별점을 설정 */
   const handleClick = (index: number, dist: 'left' | 'right') => {
+    if (index === 0 && dist === 'left' && realRating === 0.5) {
+      setRealRating(0);
+      return;
+    }
+
     if (dist === 'left') {
       setRealRating(index + 0.5);
     } else {
@@ -75,7 +84,7 @@ const Rating = () => {
             onMouseEnter={() => handleHover(index, 'right')}
             onClick={() => handleClick(index, 'right')}
           />
-          <StarIcon rating={getStarRating(index)} />
+          <StarIcon rating={getStarRating(index)} size={size} />
         </div>
       ))}
     </div>
