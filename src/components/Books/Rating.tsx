@@ -16,7 +16,11 @@ const RatingEachWrapperStyles = css({
   zIndex: 1,
 });
 
-const Rating = () => {
+interface RatingProps {
+  size?: number;
+}
+
+const Rating = ({ size = 32 }: RatingProps) => {
   const [hoverRating, setHoverRating] = useState(0);
   const [realRating, setRealRating] = useState(0);
 
@@ -80,7 +84,7 @@ const Rating = () => {
             onMouseEnter={() => handleHover(index, 'right')}
             onClick={() => handleClick(index, 'right')}
           />
-          <StarIcon rating={getStarRating(index)} />
+          <StarIcon rating={getStarRating(index)} size={size} />
         </div>
       ))}
     </div>
