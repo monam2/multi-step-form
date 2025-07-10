@@ -1,10 +1,4 @@
 export type Step = {
-  Component: React.ComponentType<StepProps>;
+  Component: React.ComponentType;
   key: string;
 };
-
-export interface StepProps {
-  nextStep: () => void;
-  prevStep: () => void;
-  isLastStep: boolean;
-}
