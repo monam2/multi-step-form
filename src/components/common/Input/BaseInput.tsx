@@ -50,6 +50,21 @@ const baseInputStyles = (props: BaseInputStylesProps) => {
       opacity: 0.6,
       backgroundColor: colors.lightGray,
     },
+
+    '&[type="date"]': {
+      position: 'relative',
+      '&::-webkit-calendar-picker-indicator': {
+        position: 'absolute',
+        right: '12px',
+        width: '16px',
+        height: '16px',
+        cursor: 'pointer',
+        zIndex: 10,
+      },
+      '&::-webkit-datetime-edit': {
+        paddingRight: '24px',
+      },
+    },
   });
 };
 
