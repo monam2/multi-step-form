@@ -24,6 +24,7 @@ const FormButtonStyles = css({
   justifyContent: 'space-between',
   width: '100%',
   gap: '10px',
+  marginTop: '20px',
 });
 
 const FormStep = ({
