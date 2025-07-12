@@ -1,9 +1,17 @@
 import { css } from '@emotion/react';
+import { useFormContext, UseFormReturn } from 'react-hook-form';
 
 import { BaseButton } from '@/components/common';
 
-import { Step } from '@/types/forms';
 import { colors } from '@/styles/colors';
+import { BookFormData, Step } from '@/types/forms';
+import {
+  INIT_STEP1_FORM_DATA,
+  INIT_STEP2_FORM_DATA,
+  INIT_STEP3_FORM_DATA,
+  INIT_STEP4_FORM_DATA,
+  INIT_STEP5_FORM_DATA,
+} from '@/constants/form';
 
 const FormStepStyles = css({
   display: 'flex',
@@ -33,24 +41,109 @@ const FormStep = ({
   nextStep,
   prevStep,
   isLastStep,
+  isLastInputStep,
+  initStep,
 }: {
+  form: UseFormReturn<BookFormData>;
   steps: Step[];
   nowStep: number;
   nextStep: () => void;
   prevStep: () => void;
   isLastStep: boolean;
+  isLastInputStep: boolean;
+  initStep: () => void;
 }) => {
+  const { setFocus, formState, trigger } = useFormContext();
   const { Component, key } = steps[nowStep];
+
+  const handlePrevStep = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    prevStep();
+  };
+
+  const handleNextStep = async (e: React.MouseEvent) => {
+    // 마지막 step이면 폼 제출 (button type=submit), 다른 step은 이벤트 전파 막기
+    if (!isLastStep) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    const isValid = await trigger(getCurrentStepFields(nowStep) as string[]);
+    const errors = formState.errors;
+    const dirtyFields = Object.keys(formState.dirtyFields);
+
+    // 전체 요소가 빈 경우 [다음]을 누르면 RHF formState가 비동기로 동작해
+    // formState의 error가 빈 객체로 나와 첫 렌더링 시 focus가 안되는 문제
+    // -> dirtyFields로 수정 여부를 확인하고, 전체가 빈 필드이면 포커스
+    if (!isValid && dirtyFields.length === 0) {
+      const firstField = getCurrentStepFields(nowStep)[0];
+
+      setFocus(firstField as string);
+      return;
+    } else if (!isValid && errors) {
+      const firstField = Object.keys(errors).find((field) => errors[field as keyof BookFormData]);
+
+      setFocus(firstField as string);
+      return;
+    }
+
+    nextStep();
+  };
+
+  const handleHome = () => {
+    initStep();
+  };
+
+  /** 현재 Step의 필드 키를 반환하는 함수 */
+  const getCurrentStepFields = (step: number) => {
+    const stepFields: string[] = [];
+    switch (step) {
+      case 0:
+        stepFields.push(...Object.keys(INIT_STEP1_FORM_DATA));
+        break;
+      case 1:
+        stepFields.push(...Object.keys(INIT_STEP2_FORM_DATA));
+        break;
+      case 2:
+        stepFields.push(...Object.keys(INIT_STEP3_FORM_DATA));
+        break;
+      case 3:
+        stepFields.push(...Object.keys(INIT_STEP4_FORM_DATA));
+        break;
+      case 4:
+        stepFields.push(...Object.keys(INIT_STEP5_FORM_DATA));
+        break;
+      default:
+        return [];
+    }
+    return stepFields;
+  };
+
+  if (isLastStep) {
+    return (
+      <div css={FormStepStyles}>
+        <Component key={key} />
+        <BaseButton type="button" size="large" onClick={handleHome}>
+          홈으로
+        </BaseButton>
+      </div>
+    );
+  }
 
   return (
     <div css={FormStepStyles}>
       <Component key={key} />
       <div css={FormButtonStyles}>
-        <BaseButton onClick={prevStep} disabled={nowStep === 0} size="large">
+        <BaseButton type="button" onClick={handlePrevStep} disabled={nowStep === 0} size="large">
           이전
         </BaseButton>
-        <BaseButton onClick={nextStep} disabled={isLastStep} size="large">
-          다음
+        <BaseButton
+          type={isLastInputStep ? 'submit' : 'button'} // 마지막 step이면 submit
+          onClick={handleNextStep}
+          size="large"
+        >
+          {isLastInputStep ? '제출' : '다음'}
         </BaseButton>
       </div>
     </div>
