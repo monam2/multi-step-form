@@ -2,13 +2,11 @@ import { css } from '@emotion/react';
 import { colors } from '@/styles/colors';
 
 type SelectColor = 'primary' | 'secondary' | 'error';
-type SelectVariant = 'contained' | 'outlined';
 type SelectSize = 'small' | 'medium' | 'large' | 'full';
 
 interface BaseSelectStylesProps
   extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, 'size' | 'color'> {
   color?: SelectColor;
-  variant?: SelectVariant;
   size?: SelectSize;
   error?: string;
   helperText?: string;
@@ -26,7 +24,7 @@ const baseSelectWrapperStyles = (props: BaseSelectStylesProps) => {
 };
 
 const baseSelectStyles = (props: BaseSelectStylesProps) => {
-  const { color = 'primary', variant = 'outlined', size = 'medium', disabled = false } = props;
+  const { color = 'primary', size = 'medium', error, disabled = false } = props;
 
   return css({
     border: 'none',
@@ -44,12 +42,8 @@ const baseSelectStyles = (props: BaseSelectStylesProps) => {
               ? '200px'
               : 'fit-content',
     height: size === 'full' ? '40px' : size === 'small' ? '30px' : '40px',
-    backgroundColor:
-      variant === 'contained' ? (disabled ? colors.lightGray : colors.white) : 'transparent',
-    outline:
-      variant === 'outlined'
-        ? `2.5px solid ${color === 'error' ? colors.error : colors.lightGray}`
-        : '2.5px solid transparent',
+    backgroundColor: disabled ? colors.lightGray : colors.white,
+    outline: `2.5px solid ${error ? colors.error : colors.lightGray}`,
     padding: size === 'small' ? '8px 12px' : '12px 12px',
     fontSize: size === 'small' ? '12px' : size === 'medium' ? '14px' : '16px',
     fontWeight: 'semibold',
@@ -67,7 +61,7 @@ const baseSelectStyles = (props: BaseSelectStylesProps) => {
     },
 
     '&:blur': {
-      outline: variant === 'outlined' ? `2.5px solid ${colors.lightGray}` : 'none',
+      outline: `2.5px solid ${colors.lightGray}`,
       outlineOffset: '2px',
     },
 
@@ -108,11 +102,11 @@ interface BaseSelectProps extends BaseSelectStylesProps {
 }
 
 const BaseSelect = ({ options, error, helperText, ...restProps }: BaseSelectProps) => {
-  const { color, variant, size, ...props } = restProps;
+  const { color, size, ...props } = restProps;
 
   return (
     <div css={baseSelectWrapperStyles({ size })}>
-      <select css={baseSelectStyles({ color, variant, size, ...props })} {...props}>
+      <select css={baseSelectStyles({ color, size, error, ...props })} {...props}>
         {options.map(({ key, value, label }, index) => (
           <option key={key || label || value || `${index}-${value}`} value={value}>
             {label}

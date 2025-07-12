@@ -2,20 +2,18 @@ import { css } from '@emotion/react';
 import { colors } from '@/styles/colors';
 
 type InputColor = 'primary' | 'secondary' | 'error';
-type InputVariant = 'contained' | 'outlined';
 type InputSize = 'small' | 'medium' | 'large' | 'full';
 
 interface BaseInputStylesProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'color'> {
   color?: InputColor;
-  variant?: InputVariant;
   size?: InputSize;
   error?: string;
   helperText?: string;
 }
 
 const baseInputStyles = (props: BaseInputStylesProps) => {
-  const { color = 'primary', variant = 'outlined', size = 'medium', disabled } = props;
+  const { color = 'primary', size = 'medium', disabled, error } = props;
 
   return css({
     border: 'none',
@@ -24,12 +22,8 @@ const baseInputStyles = (props: BaseInputStylesProps) => {
     alignItems: 'center',
     width: size === 'full' ? '100%' : 'fit-content',
     height: size === 'full' ? '40px' : 'auto',
-    backgroundColor:
-      variant === 'contained' ? (disabled ? colors.lightGray : colors.white) : 'transparent',
-    outline:
-      variant === 'outlined'
-        ? `2px solid ${color === 'error' ? colors.error : colors.lightGray}`
-        : '2px solid transparent',
+    backgroundColor: disabled ? colors.lightGray : colors.white,
+    outline: `2px solid ${error ? colors.error : colors.lightGray}`,
     padding: size === 'small' ? '8px 12px' : '12px',
     fontSize: size === 'small' ? '12px' : size === 'medium' ? '14px' : '16px',
     fontWeight: 'semibold',
@@ -97,10 +91,10 @@ const baseInputHelperTextStyles = css({
 });
 
 const BaseInput = ({ error, helperText, ...restProps }: BaseInputStylesProps) => {
-  const { color, variant, size, ...props } = restProps;
+  const { color, size, ...props } = restProps;
   return (
     <div css={baseInputWrapperStyles}>
-      <input css={baseInputStyles({ color, variant, size, ...props })} {...props} />
+      <input css={baseInputStyles({ color, size, error, ...props })} {...props} />
       {(error || helperText) && (
         <div css={baseInputTextWrapperStyles({ error })}>
           {error && <p css={baseInputErrorStyles}>{error}</p>}
