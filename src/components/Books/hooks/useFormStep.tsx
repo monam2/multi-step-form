@@ -17,9 +17,14 @@ const useFormStep = (stepLength: number) => {
     setStep(step - 1);
   };
 
-  const isLastStep = step === stepLength - 1;
+  const initStep = () => {
+    setStep(0);
+  };
 
-  return { nowStep: step, nextStep, prevStep, isLastStep };
+  const isLastStep = step === stepLength - 1; // 마지막 스텝
+  const isLastInputStep = step === stepLength - 2; // form 정보 입력하는 마지막 스텝
+
+  return { nowStep: step, nextStep, prevStep, isLastInputStep, isLastStep, initStep };
 };
 
 export default useFormStep;
