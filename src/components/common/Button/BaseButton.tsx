@@ -52,7 +52,7 @@ interface BaseButtonProps extends BaseButtonStylesProps {
 
 const BaseButton = (props: BaseButtonProps) => {
   return (
-    <button css={baseButtonStyles(props)} {...props}>
+    <button css={baseButtonStyles(props)} type={props.type || 'button'} {...props}>
       {props.children}
     </button>
   );
