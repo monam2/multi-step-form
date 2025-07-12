@@ -17,3 +17,8 @@ export { default as LabeledTextarea } from './Textarea/LabeledTextarea';
 /* Icons */
 export { default as StarIcon } from './Icon/StarIcon';
 export { default as DeleteIcon } from './Icon/DeleteIcon';
+
+/* RHF */
+export { default as RHFLabeledInput } from './Input/RHFLabeledInput';
+export { default as RHFLabeledSelect } from './Select/RHFLabeledSelect';
+export { default as RHFLabeledTextarea } from './Textarea/RHFLabeledTextarea';

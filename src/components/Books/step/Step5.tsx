@@ -5,7 +5,7 @@ import { BaseButton } from '@/components/common';
 
 import { colors } from '@/styles/colors';
 
-const Step2Styles = css({
+const Step5Styles = css({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
@@ -37,7 +37,7 @@ const Step5 = () => {
   const [isRecommended, setIsRecommended] = useState(true);
 
   return (
-    <div css={Step2Styles}>
+    <div css={Step5Styles}>
       <h2>공개 설정</h2>
       <div css={TextContainerStyles}>
         <span>다른 사람들에게 이 도서를 공개하시겠습니까?</span>

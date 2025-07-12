@@ -4,9 +4,10 @@ import { css } from '@emotion/react';
 import { BaseButton, LabeledTextarea, UnStylishButton } from '@/components/common';
 import DeleteIcon from '@/components/common/Icon/DeleteIcon';
 
+import { Quote } from '@/types/forms';
 import { colors } from '@/styles/colors';
 
-const Step3Styles = css({
+const Step4Styles = css({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
@@ -49,13 +50,6 @@ const DeleteButtonStyles = css({
   color: colors.gray,
 });
 
-interface Quote {
-  id: number;
-  label: string;
-  name: string;
-  value: string;
-}
-
 const Step4 = () => {
   const [quotes, setQuotes] = useState<Quote[]>([
     {
@@ -87,7 +81,7 @@ const Step4 = () => {
   };
 
   return (
-    <div css={Step3Styles}>
+    <div css={Step4Styles}>
       <h2>인용구</h2>
       <div css={TextContainerStyles}>
         <span>기억하고 싶은 인용구를 추가해주세요.</span>

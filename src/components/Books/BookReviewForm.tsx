@@ -1,15 +1,17 @@
 import { css } from '@emotion/react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import useFormStep from './hooks/useFormStep';
 import useScreenSize from '@/hooks/useScreenSize';
 
 import BookPreview from './BookPreview';
 import FormHeader from './form/FormHeader';
-import { Step1, Step2, Step3, Step4, Step5, FormStep } from './step';
 import ProgressBar from '@/components/common/Progressbar/ProgressBar';
+import { Step1, Step2, Step3, Step4, Step5, Step6, FormStep } from './step';
 
-import { Step } from '@/types/forms';
 import { colors } from '@/styles/colors';
+import { BookFormData, Step } from '@/types/forms';
+import { INIT_FORM_DATA } from '@/constants/form';
 
 const steps: Step[] = [
   { Component: Step1, key: 'step1' },
@@ -17,6 +19,7 @@ const steps: Step[] = [
   { Component: Step3, key: 'step3' },
   { Component: Step4, key: 'step4' },
   { Component: Step5, key: 'step5' },
+  { Component: Step6, key: 'step6' },
 ];
 
 const BookReviewFormContainerStyles = css({
@@ -43,27 +46,43 @@ const BookReviewFormStyles = ({ isDesktop }: { isDesktop: boolean }) => {
 };
 
 const BookReviewForm = () => {
+  const form = useForm<BookFormData>({
+    mode: 'onChange',
+    defaultValues: INIT_FORM_DATA,
+    shouldFocusError: true,
+  });
   const { isDesktop } = useScreenSize({ width: 1024 });
-  const { nowStep, nextStep, prevStep, isLastStep } = useFormStep(steps.length); // 폼 스텝 관리
+  const { nowStep, nextStep, prevStep, isLastStep, isLastInputStep, initStep } = useFormStep(
+    steps.length,
+  ); // 폼 스텝 관리
+
+  const onSubmit = (data: BookFormData) => {
+    console.log(data);
+  };
 
   return (
     <div css={BookReviewFormContainerStyles}>
       <FormHeader />
       <ProgressBar step={nowStep} totalStep={5} color={colors.primary} size="full" />
 
-      <div css={BookReviewFormStyles({ isDesktop })}>
-        {/* 도서 정보 입력 폼 */}
-        <FormStep
-          steps={steps}
-          nowStep={nowStep}
-          nextStep={nextStep}
-          prevStep={prevStep}
-          isLastStep={isLastStep}
-        />
+      <FormProvider {...form}>
+        <form css={BookReviewFormStyles({ isDesktop })} onSubmit={form.handleSubmit(onSubmit)}>
+          {/* 도서 정보 입력 폼 */}
+          <FormStep
+            form={form}
+            steps={steps}
+            nowStep={nowStep}
+            nextStep={nextStep}
+            prevStep={prevStep}
+            isLastStep={isLastStep}
+            isLastInputStep={isLastInputStep}
+            initStep={initStep}
+          />
 
-        {/* 데스크탑 모드일 때만 Preview 표시 */}
-        {isDesktop && <BookPreview />}
-      </div>
+          {/* 데스크탑 모드일 때만 Preview 표시 */}
+          {isDesktop && <BookPreview />}
+        </form>
+      </FormProvider>
     </div>
   );
 };
