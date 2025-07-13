@@ -70,6 +70,9 @@ const baseTextareaWrapperStyles = css({
 
 const baseTextareaTextWrapperStyles = ({ error }: { error?: string }) => {
   return css({
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '4px',
     color: colors.gray,
     fontSize: '12px',
     marginTop: '2px',
