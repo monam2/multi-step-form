@@ -33,7 +33,7 @@ const InputContainerStyles = css({
 });
 
 const Step3 = () => {
-  const { watch, setValue } = useFormContext();
+  const { watch } = useFormContext();
   const review = watch('review');
   const rating = watch('rating');
 
@@ -51,14 +51,18 @@ const Step3 = () => {
           name="review"
           placeholder="독후감을 입력해주세요."
           size="full"
-          value={review}
-          onChange={(e) => setValue('review', e.target.value)}
           helperText={`${review.length}/1000`}
           rules={{
-            required: rating === 1 || rating === 5 ? '독후감을 입력해주세요.' : false,
+            required: rating <= 1 || rating >= 5 ? '독후감을 입력해주세요.' : false,
             maxLength: {
               value: 1000,
               message: '독후감은 최대 1000자까지 작성할 수 있습니다.',
+            },
+            validate: (value) => {
+              if (rating <= 1 || rating >= 5 || value.length < 100) {
+                return '최소 100자 이상의 독후감을 입력해주세요.';
+              }
+              return true;
             },
           }}
         />

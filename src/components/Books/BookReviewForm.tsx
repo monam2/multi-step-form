@@ -47,7 +47,7 @@ const BookReviewFormStyles = ({ isDesktop }: { isDesktop: boolean }) => {
 
 const BookReviewForm = () => {
   const form = useForm<BookFormData>({
-    mode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: INIT_FORM_DATA,
     shouldFocusError: true,
   });
