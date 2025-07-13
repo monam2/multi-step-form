@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { css } from '@emotion/react';
+import { useFormContext } from 'react-hook-form';
 
 import Rating from '../Rating';
 import { BaseButton } from '@/components/common';
@@ -48,7 +48,12 @@ const TextStyles = css({
 });
 
 const Step2 = () => {
-  const [isRecommended, setIsRecommended] = useState(true);
+  const { watch, setValue } = useFormContext();
+  const isRecommended = watch('isRecommended');
+
+  const handleRatingChange = (value: number) => {
+    setValue('rating', value);
+  };
 
   return (
     <div css={Step2Styles}>
@@ -61,7 +66,7 @@ const Step2 = () => {
           size="large"
           variant="contained"
           color={isRecommended ? 'primary' : 'secondary'}
-          onClick={() => setIsRecommended(true)}
+          onClick={() => setValue('isRecommended', true)}
         >
           추천하기
         </BaseButton>
@@ -69,7 +74,7 @@ const Step2 = () => {
           size="large"
           variant="contained"
           color={isRecommended ? 'secondary' : 'primary'}
-          onClick={() => setIsRecommended(false)}
+          onClick={() => setValue('isRecommended', false)}
         >
           추천안함
         </BaseButton>
@@ -78,7 +83,7 @@ const Step2 = () => {
         <span css={css(TextStyles, { fontSize: '20px', marginBottom: '20px' })}>
           별점을 선택해주세요.
         </span>
-        <Rating size={40} />
+        <Rating size={40} value={watch('rating')} onChange={handleRatingChange} />
         <span css={TextStyles}>별점은 1점 또는 5점을 선택하신 경우</span>
         <span css={TextStyles}>다음 단계에서 독후감을 필수로 작성해야 합니다.</span>
       </div>
