@@ -18,11 +18,12 @@ const RatingEachWrapperStyles = css({
 
 interface RatingProps {
   size?: number;
+  value: number;
+  onChange: (value: number) => void;
 }
 
-const Rating = ({ size = 32 }: RatingProps) => {
-  const [hoverRating, setHoverRating] = useState(0);
-  const [realRating, setRealRating] = useState(0);
+const Rating = ({ size = 32, value, onChange }: RatingProps) => {
+  const [hoverRating, setHoverRating] = useState(value);
 
   /** 마우스 올렸을 때의 별점을 설정 */
   const handleHover = (index: number, dist: 'left' | 'right') => {
@@ -35,22 +36,22 @@ const Rating = ({ size = 32 }: RatingProps) => {
 
   /** 클릭했을 때의 별점을 설정 */
   const handleClick = (index: number, dist: 'left' | 'right') => {
-    if (index === 0 && dist === 'left' && realRating === 0.5) {
-      setRealRating(0);
+    if (index === 0 && dist === 'left' && value === 0.5) {
+      onChange(0);
       return;
     }
 
     if (dist === 'left') {
-      setRealRating(index + 0.5);
+      onChange(index + 0.5);
     } else {
-      setRealRating(index + 1);
+      onChange(index + 1);
     }
   };
 
   /** 별점 계산 로직 */
   const getStarRating = (index: number) => {
     // 별점에서 마우스를 내리면 realRating으로 계산
-    const currentRating = hoverRating || realRating;
+    const currentRating = hoverRating || value;
 
     if (currentRating >= index + 1) return 1;
     if (currentRating >= index + 0.5) return 0.5;
