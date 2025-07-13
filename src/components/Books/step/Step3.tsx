@@ -58,8 +58,8 @@ const Step3 = () => {
               value: 1000,
               message: '독후감은 최대 1000자까지 작성할 수 있습니다.',
             },
-            validate: (value) => {
-              if (rating <= 1 || rating >= 5 || value.length < 100) {
+            validate: () => {
+              if ((rating <= 1 || rating >= 5) && review.length < 100) {
                 return '최소 100자 이상의 독후감을 입력해주세요.';
               }
               return true;
