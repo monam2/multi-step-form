@@ -1,11 +1,16 @@
-import { useState } from 'react';
 import { css } from '@emotion/react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { BaseButton, LabeledTextarea, UnStylishButton } from '@/components/common';
+import {
+  BaseButton,
+  RHFLabeledInput,
+  RHFLabeledTextarea,
+  UnStylishButton,
+} from '@/components/common';
 import DeleteIcon from '@/components/common/Icon/DeleteIcon';
 
-import { Quote } from '@/types/forms';
 import { colors } from '@/styles/colors';
+import { BookFormData } from '@/types/forms';
 
 const Step4Styles = css({
   display: 'flex',
@@ -40,6 +45,10 @@ const InputContainerStyles = css({
 
 const QuoteContainerStyles = css({
   position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px',
+  marginBottom: '20px',
 });
 
 const DeleteButtonStyles = css({
@@ -51,34 +60,27 @@ const DeleteButtonStyles = css({
 });
 
 const Step4 = () => {
-  const [quotes, setQuotes] = useState<Quote[]>([
-    {
-      id: 0,
-      label: '인용구',
-      name: 'quote1',
-      value: '',
-    },
-  ]);
+  const { control } = useFormContext();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'quotes',
+  });
 
   const handleAddQuote = () => {
-    setQuotes([
-      ...quotes,
-      {
-        id: quotes.length,
-        label: `인용구`,
-        name: `quote`,
-        value: '',
-      },
-    ]);
+    append({
+      label: `인용구`,
+      name: `quote`,
+      value: '',
+      page: 0,
+    });
   };
 
-  const deleteQuote = (id: number) => {
-    setQuotes(quotes.filter((quote) => quote.id !== id));
+  const handleDeleteQuote = (index: number) => {
+    remove(index);
   };
 
-  const handleDeleteQuote = (id: number) => {
-    deleteQuote(id);
-  };
+  // 인용구 갯수가 2개 이상인지 확인
+  const isQuotesOverLength = fields.length > 1;
 
   return (
     <div css={Step4Styles}>
@@ -93,26 +95,55 @@ const Step4 = () => {
       </div>
       <div css={InputContainerStyles}>
         {/* RHF 변경 및 유효성 검증 추가 필요 */}
-        {quotes.map((quote, index) => (
-          <div key={quote.id} css={QuoteContainerStyles}>
-            <LabeledTextarea
-              key={quote.id}
-              label={`${quote.label} ${index + 1}`}
-              name={quote.name}
+        {fields.map((field, index) => (
+          <div key={field.id} css={QuoteContainerStyles}>
+            <RHFLabeledTextarea<BookFormData>
+              key={field.id}
+              label={`인용구 ${index + 1}`}
+              name={`quotes.${index}.value`}
               placeholder="인용구를 입력해주세요."
               size="full"
-              value={quote.value}
-              onChange={(e) => {
-                const newQuotes = [...quotes];
-                newQuotes[quote.id].value = e.target.value;
-                setQuotes(newQuotes);
+              rules={{
+                required: isQuotesOverLength
+                  ? '두 개 이상의 인용구를 입력할 경우, 인용구를 입력해주세요.'
+                  : false,
               }}
             />
             <div css={DeleteButtonStyles}>
-              <UnStylishButton onClick={() => handleDeleteQuote(quote.id)}>
+              <UnStylishButton onClick={() => handleDeleteQuote(index)}>
                 <DeleteIcon size={16} />
               </UnStylishButton>
             </div>
+            {isQuotesOverLength && (
+              <RHFLabeledInput<BookFormData>
+                label={`페이지`}
+                name={`quotes.${index}.page`}
+                type="number"
+                min={1}
+                placeholder="인용구가 있는 페이지를 입력해주세요."
+                size="full"
+                rules={{
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message: '숫자만 입력해주세요.',
+                  },
+                  validate: (value, formData) => {
+                    console.log('validation 실행:', { value, isQuotesOverLength });
+
+                    if (!isQuotesOverLength) {
+                      return true;
+                    }
+                    if (value === '' || value === 0 || value === '0') {
+                      return '페이지를 입력해주세요.';
+                    }
+                    if (value > Number(formData.pageCount)) {
+                      return '인용구는 책의 페이지 범위를 초과할 수 없습니다.';
+                    }
+                    return true;
+                  },
+                }}
+              />
+            )}
           </div>
         ))}
       </div>

@@ -27,10 +27,10 @@ export interface Step3FormData {
 
 /** 인용구 */
 export type Quote = {
-  id: number;
   label: string;
   name: string;
   value: string;
+  page?: number;
 };
 
 export interface Step4FormData {

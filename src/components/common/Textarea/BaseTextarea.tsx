@@ -2,20 +2,18 @@ import { css } from '@emotion/react';
 import { colors } from '@/styles/colors';
 
 type TextareaColor = 'primary' | 'secondary' | 'error';
-type TextareaVariant = 'contained' | 'outlined';
 type TextareaSize = 'small' | 'medium' | 'large' | 'full';
 
 interface BaseTextareaStylesProps
   extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'size' | 'color'> {
   color?: TextareaColor;
-  variant?: TextareaVariant;
   size?: TextareaSize;
   error?: string;
   helperText?: string;
 }
 
 const baseTextareaStyles = (props: BaseTextareaStylesProps) => {
-  const { color = 'primary', variant = 'outlined', size = 'medium', disabled } = props;
+  const { color = 'primary', size = 'medium', disabled, error } = props;
 
   return css({
     border: 'none',
@@ -29,12 +27,8 @@ const baseTextareaStyles = (props: BaseTextareaStylesProps) => {
           : size === 'large'
             ? '120px'
             : '100px',
-    backgroundColor:
-      variant === 'contained' ? (disabled ? colors.lightGray : colors.white) : 'transparent',
-    outline:
-      variant === 'outlined'
-        ? `2px solid ${color === 'error' ? colors.error : colors.lightGray}`
-        : '2px solid transparent',
+    backgroundColor: disabled ? colors.lightGray : colors.white,
+    outline: `2px solid ${error ? colors.error : colors.lightGray}`,
     padding: size === 'small' ? '8px 12px' : '12px',
     fontSize: size === 'small' ? '12px' : size === 'medium' ? '14px' : '16px',
     fontWeight: 'semibold',
@@ -44,8 +38,8 @@ const baseTextareaStyles = (props: BaseTextareaStylesProps) => {
     fontFamily: 'inherit',
 
     '&:focus': {
-      outline: `2px solid ${color === 'error' ? colors.error : colors[color]}`,
-      boxShadow: `0 0 0 1px ${color === 'error' ? colors.error + '20' : colors[color] + '20'}`,
+      outline: `2px solid ${colors[color]}`,
+      boxShadow: `0 0 0 1px ${error ? colors.error + '20' : colors[color] + '20'}`,
     },
 
     '&::placeholder': {
@@ -92,10 +86,10 @@ const baseTextareaHelperTextStyles = css({
 });
 
 const BaseTextarea = ({ error, helperText, ...restProps }: BaseTextareaStylesProps) => {
-  const { color, variant, size, ...props } = restProps;
+  const { color, size, ...props } = restProps;
   return (
     <div css={baseTextareaWrapperStyles}>
-      <textarea css={baseTextareaStyles({ color, variant, size, ...props })} {...props} />
+      <textarea css={baseTextareaStyles({ color, size, error, ...props })} {...props} />
       {(error || helperText) && (
         <div css={baseTextareaTextWrapperStyles({ error })}>
           {error && <p css={baseTextareaErrorStyles}>{error}</p>}

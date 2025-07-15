@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useFormContext, UseFormReturn } from 'react-hook-form';
+import { FieldError, useFormContext, UseFormReturn } from 'react-hook-form';
 
 import { BaseButton } from '@/components/common';
 
@@ -68,16 +68,24 @@ const FormStep = ({
       e.preventDefault();
       e.stopPropagation();
     }
-
-    const isValid = await trigger(getCurrentStepFields(nowStep) as string[]);
+    const nowStepFields = getCurrentStepFields(nowStep);
+    const isValid = await trigger(nowStepFields as string[]);
     const errors = formState.errors;
     const dirtyFields = Object.keys(formState.dirtyFields);
 
-    // 전체 요소가 빈 경우 [다음]을 누르면 RHF formState가 비동기로 동작해
-    // formState의 error가 빈 객체로 나와 첫 렌더링 시 focus가 안되는 문제
-    // -> dirtyFields로 수정 여부를 확인하고, 전체가 빈 필드이면 포커스
-    if (!isValid && dirtyFields.length === 0) {
-      const firstField = getCurrentStepFields(nowStep)[0];
+    // 이하 로직 분리 필요
+    if (nowStep === 3 && !isValid && errors?.quotes) {
+      const quotesErrors = errors.quotes as Record<string, FieldError>;
+      const firstField = Object.keys(quotesErrors)[0];
+
+      const errorKey = Object.keys(quotesErrors[firstField])[0];
+      setFocus(`quotes.${firstField}.${errorKey}` as string); // 인용구 에러 배열의 첫번째 요소 추출해서 키로 설정
+      return;
+    } else if (!isValid && dirtyFields.length === 0) {
+      // 전체 요소가 빈 경우 [다음]을 누르면 RHF formState가 비동기로 동작해
+      // formState의 error가 빈 객체로 나와 첫 렌더링 시 focus가 안되는 문제
+      // -> dirtyFields로 수정 여부를 확인하고, 전체가 빈 필드이면 포커스
+      const firstField = nowStepFields[0];
 
       setFocus(firstField as string);
       return;
