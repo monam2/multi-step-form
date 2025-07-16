@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useFormContext, UseFormReturn } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { BaseButton } from '@/components/common';
 
@@ -44,7 +44,6 @@ const FormStep = ({
   isLastInputStep,
   initStep,
 }: {
-  form: UseFormReturn<BookFormData>;
   steps: Step[];
   nowStep: number;
   nextStep: () => void;
@@ -53,7 +52,7 @@ const FormStep = ({
   isLastInputStep: boolean;
   initStep: () => void;
 }) => {
-  const { setFocus, formState, trigger } = useFormContext();
+  const { setFocus, formState, trigger, handleSubmit, reset } = useFormContext();
   const { Component, key } = steps[nowStep];
 
   const handlePrevStep = (e: React.MouseEvent) => {
@@ -63,11 +62,21 @@ const FormStep = ({
   };
 
   const handleNextStep = async (e: React.MouseEvent) => {
-    // 마지막 step이면 폼 제출 (button type=submit), 다른 step은 이벤트 전파 막기
-    if (!isLastStep) {
-      e.preventDefault();
-      e.stopPropagation();
+    // 마지막 step이면 폼 제출 (button type=submit)
+    if (isLastInputStep) {
+      // 서버로 form 데이터를 보내는 요청 실행
+      handleSubmit((data) => {
+        console.log(data);
+      });
+
+      reset(); // 폼 초기화
+      nextStep();
+      return;
     }
+
+    // 다른 step은 이벤트 전파 막기
+    e.preventDefault();
+    e.stopPropagation();
 
     const isValid = await trigger(getCurrentStepFields(nowStep) as string[]);
     const errors = formState.errors;

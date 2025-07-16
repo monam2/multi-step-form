@@ -56,20 +56,15 @@ const BookReviewForm = () => {
     steps.length,
   ); // 폼 스텝 관리
 
-  const onSubmit = (data: BookFormData) => {
-    console.log(data);
-  };
-
   return (
     <div css={BookReviewFormContainerStyles}>
       <FormHeader />
       <ProgressBar step={nowStep} totalStep={5} color={colors.primary} size="full" />
 
       <FormProvider {...form}>
-        <form css={BookReviewFormStyles({ isDesktop })} onSubmit={form.handleSubmit(onSubmit)}>
+        <form css={BookReviewFormStyles({ isDesktop })}>
           {/* 도서 정보 입력 폼 */}
           <FormStep
-            form={form}
             steps={steps}
             nowStep={nowStep}
             nextStep={nextStep}

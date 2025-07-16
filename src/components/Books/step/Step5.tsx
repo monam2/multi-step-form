@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { css } from '@emotion/react';
+import { useFormContext } from 'react-hook-form';
 
 import { BaseButton } from '@/components/common';
 
@@ -34,7 +34,8 @@ const ButtonContainerStyles = css({
 });
 
 const Step5 = () => {
-  const [isRecommended, setIsRecommended] = useState(true);
+  const { watch, setValue } = useFormContext();
+  const isPublic = watch('isPublic');
 
   return (
     <div css={Step5Styles}>
@@ -47,8 +48,8 @@ const Step5 = () => {
           css={css({ width: '100px' })}
           size="large"
           variant="contained"
-          color={isRecommended ? 'primary' : 'secondary'}
-          onClick={() => setIsRecommended(true)}
+          color={isPublic ? 'primary' : 'secondary'}
+          onClick={() => setValue('isPublic', true)}
         >
           공개
         </BaseButton>
@@ -56,8 +57,8 @@ const Step5 = () => {
           css={css({ width: '100px' })}
           size="large"
           variant="contained"
-          color={isRecommended ? 'secondary' : 'primary'}
-          onClick={() => setIsRecommended(false)}
+          color={isPublic ? 'secondary' : 'primary'}
+          onClick={() => setValue('isPublic', false)}
         >
           비공개
         </BaseButton>
