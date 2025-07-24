@@ -17,7 +17,7 @@ const TextContainerStyles = css({
   justifyContent: 'center',
   padding: '20px',
   gap: '10px',
-  fontSize: '16px',
+  fontSize: '20px',
   color: colors.gray,
 });
 
