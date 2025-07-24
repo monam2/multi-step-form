@@ -1,4 +1,4 @@
-import { FieldValues, Path, RegisterOptions, useFormContext } from 'react-hook-form';
+import { FieldValues, get, Path, RegisterOptions, useFormContext } from 'react-hook-form';
 
 import LabeledTextarea from './LabeledTextarea';
 
@@ -20,12 +20,14 @@ const RHFLabeledTextarea = <T extends FieldValues>({
     register,
   } = useFormContext();
 
+  const error = get(errors, name);
+
   return (
     <LabeledTextarea
       label={label}
       {...restProps}
       {...register(name, rules)}
-      error={errors[name]?.message as string}
+      error={error?.message as string}
     />
   );
 };
