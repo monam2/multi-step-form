@@ -33,9 +33,11 @@ const InputContainerStyles = css({
 });
 
 const Step3 = () => {
-  const { watch } = useFormContext();
+  const { watch, getValues } = useFormContext();
+
+  // review -> 필드 글자 수 체크(실시간), rating -> 이전 step 별점(실시간 x)
   const review = watch('review');
-  const rating = watch('rating');
+  const rating = getValues('rating');
 
   return (
     <div css={Step3Styles}>
