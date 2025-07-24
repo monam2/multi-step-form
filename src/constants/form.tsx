@@ -38,10 +38,10 @@ export const INIT_STEP3_FORM_DATA: Step3FormData = {
 export const INIT_STEP4_FORM_DATA: Step4FormData = {
   quotes: [
     {
-      id: 0,
       label: '인용구',
       name: 'quote',
       value: '',
+      page: 0,
     },
   ],
 };
